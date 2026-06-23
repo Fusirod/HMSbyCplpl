@@ -26,7 +26,7 @@ public:
     void displayAllInvoices();
     
     // For reports
-    double calculateTotalRevenue();
+    long long calculateTotalRevenue();
 };
 
 #endif // INVOICE_MANAGER_H

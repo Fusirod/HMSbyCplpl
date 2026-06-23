@@ -53,7 +53,7 @@ struct InventoryItem {
     string name;
     string category; // "Medicine", "Equipment"
     int quantity;
-    double price;
+    long long price;
 };
 
 // 6. Quản lý Hóa đơn và Thanh toán (Invoices)
@@ -61,7 +61,7 @@ struct Invoice {
     string id;
     string patientId;
     string date;
-    double totalAmount;
+    long long totalAmount;
     string status; // "Unpaid", "Paid"
 };
 

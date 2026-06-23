@@ -34,7 +34,7 @@ void InvoiceManager::loadFromFile() {
         inv.id = id;
         inv.patientId = pId;
         inv.date = date;
-        inv.totalAmount = stod(amountStr);
+        inv.totalAmount = stoll(amountStr);
         inv.status = status;
         invoices.push_back(inv);
     }
@@ -66,7 +66,7 @@ void InvoiceManager::addInvoice() {
     inv.date = Utils::readString();
     
     cout << "Nhap tong tien: ";
-    inv.totalAmount = Utils::readDouble();
+    inv.totalAmount = Utils::readLongLong();
     
     cout << "Nhap trang thai (Paid/Unpaid): ";
     inv.status = Utils::readString();
@@ -92,7 +92,7 @@ void InvoiceManager::editInvoice() {
             if (!date.empty()) inv.date = date;
             
             cout << "Nhap tong tien moi (nhap -1 de giu nguyen): ";
-            double amount = Utils::readDouble();
+            long long amount = Utils::readLongLong();
             if (amount != -1) inv.totalAmount = amount;
             
             cout << "Nhap trang thai moi (Paid/Unpaid) (de trong de giu nguyen): ";
@@ -160,8 +160,8 @@ void InvoiceManager::displayAllInvoices() {
     Utils::pauseScreen();
 }
 
-double InvoiceManager::calculateTotalRevenue() {
-    double total = 0;
+long long InvoiceManager::calculateTotalRevenue() {
+    long long total = 0;
     for (const auto& inv : invoices) {
         if (inv.status == "Paid") {
             total += inv.totalAmount;

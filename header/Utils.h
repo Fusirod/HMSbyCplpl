@@ -10,7 +10,7 @@ namespace Utils {
     void pauseScreen();
     string trim(const string& str);
     int readInt();
-    double readDouble();
+    long long readLongLong();
     string readString();
     string generateId(const string& prefix, int currentCount);
 }

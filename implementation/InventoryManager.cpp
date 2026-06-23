@@ -35,7 +35,7 @@ void InventoryManager::loadFromFile() {
         item.name = name;
         item.category = category;
         item.quantity = stoi(qtyStr);
-        item.price = stod(priceStr);
+        item.price = stoll(priceStr);
         items.push_back(item);
     }
     file.close();
@@ -69,7 +69,7 @@ void InventoryManager::addItem() {
     item.quantity = Utils::readInt();
     
     cout << "Nhap don gia: ";
-    item.price = Utils::readDouble();
+    item.price = Utils::readLongLong();
     
     items.push_back(item);
     saveToFile();
@@ -100,7 +100,7 @@ void InventoryManager::editItem() {
             if (qty != -1) item.quantity = qty;
             
             cout << "Nhap don gia moi (nhap -1 de giu nguyen): ";
-            double price = Utils::readDouble();
+            long long price = Utils::readLongLong();
             if (price != -1) item.price = price;
             
             saveToFile();

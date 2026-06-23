@@ -44,12 +44,12 @@ namespace Utils {
         return value;
     }
 
-    double readDouble() {
-        double value;
+    long long readLongLong() {
+        long long value;
         while (!(cin >> value)) {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Loi nhap du lieu. Vui long nhap mot so: ";
+            cout << "Loi nhap du lieu. Vui long nhap mot so nguyen lon: ";
         }
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         return value;
