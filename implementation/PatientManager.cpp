@@ -160,7 +160,7 @@ void PatientManager::searchPatient() {
     for (const auto& p : patients) {
         if (p.id.find(query) != string::npos || p.name.find(query) != string::npos) {
             cout << p.id << " - " << p.name << " - Tuoi: " << p.age 
-                 << " - SĐT: " << p.phone << " - Tien su benh: " << p.medicalHistory << "\n";
+                 << " - SDT: " << p.phone << " - Tien su benh: " << p.medicalHistory << "\n";
             found = true;
         }
     }
@@ -176,7 +176,7 @@ void PatientManager::displayAllPatients() {
     } else {
         for (const auto& p : patients) {
             cout << p.id << " | " << p.name << " | Tuoi: " << p.age 
-                 << " | Gioi tinh: " << p.gender << " | SĐT: " << p.phone 
+                 << " | Gioi tinh: " << p.gender << " | SDT: " << p.phone 
                  << " | Dia chi: " << p.address << " | Tien su: " << p.medicalHistory << "\n";
         }
     }

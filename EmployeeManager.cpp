@@ -5,7 +5,7 @@
 #include <sstream>
 
 EmployeeManager::EmployeeManager() {
-    filename = "data/employees.txt";
+    filename = "employees.txt";
     loadFromFile();
     
     // Create default admin if list is empty
