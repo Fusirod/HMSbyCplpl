@@ -10,22 +10,6 @@ Do an quan ly benh vien/phong kham mon Co so lap trinh.
 - De bai: `HDBT_Nhom_CSLT.pdf`
 - Bien dich: `build.bat`
 
-## Dung yeu cau de bai
-
-- Khong dung `class`.
-- Khong dung `struct`.
-- Khong dung `vector`.
-- Du lieu duoc luu bang mang 1 chieu va mang song song.
-- Moi truong thong tin nam trong mot mang rieng, cung chi so `i` la cung mot benh nhan:
-  - `patientIds[i]`
-  - `names[i]`
-  - `ages[i]`
-  - `genders[i]`
-  - `phones[i]`
-  - `diagnoses[i]`
-  - `fees[i]`
-- Cac ham xu ly nhan mang va so luong phan tu qua tham so.
-
 ## Chuc nang
 
 1. Them benh nhan
