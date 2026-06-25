@@ -9,7 +9,7 @@ const int MAX = 1000;
 const int LEN_ID = 20;
 const int LEN_NAME = 100;
 const int LEN_TEXT = 200;
-const char FILE_NAME[] = "data/patients.txt";
+const char FILE_NAME[] = "patients.txt";
 
 void clearInput() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');

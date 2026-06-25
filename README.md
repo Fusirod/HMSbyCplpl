@@ -1,13 +1,22 @@
 # Hospital Management - CSLT
 
-Chuong trinh quan ly benh vien/phong kham theo yeu cau mon Co so lap trinh.
+Do an quan ly benh vien/phong kham mon Co so lap trinh.
 
-## Dac diem ky thuat
+## Noi dung chinh
 
-- Ngon ngu: C++.
-- Khong dung OOP: khong dung `class`, `struct`, `vector`.
-- Luu tru bang mang 1 chieu va mang song song.
-- Moi truong thong tin duoc luu trong mot mang rieng:
+- Source chinh: `main.cpp`
+- File chay: `HMS.exe`
+- File du lieu: `patients.txt`
+- De bai: `HDBT_Nhom_CSLT.pdf`
+- Bien dich: `build.bat`
+
+## Dung yeu cau de bai
+
+- Khong dung `class`.
+- Khong dung `struct`.
+- Khong dung `vector`.
+- Du lieu duoc luu bang mang 1 chieu va mang song song.
+- Moi truong thong tin nam trong mot mang rieng, cung chi so `i` la cung mot benh nhan:
   - `patientIds[i]`
   - `names[i]`
   - `ages[i]`
@@ -15,8 +24,7 @@ Chuong trinh quan ly benh vien/phong kham theo yeu cau mon Co so lap trinh.
   - `phones[i]`
   - `diagnoses[i]`
   - `fees[i]`
-- Cac mang co cung chi so `i` mo ta cung mot benh nhan.
-- Du lieu duoc doc tu va ghi vao file text `data/patients.txt`.
+- Cac ham xu ly nhan mang va so luong phan tu qua tham so.
 
 ## Chuc nang
 
@@ -31,8 +39,14 @@ Chuong trinh quan ly benh vien/phong kham theo yeu cau mon Co so lap trinh.
 
 ## Bien dich
 
+Chay:
+
 ```bat
 .\build.bat
 ```
 
-File chay duoc tao ra: `HMS.exe`.
+Hoac:
+
+```bat
+g++ main.cpp -o HMS.exe
+```
