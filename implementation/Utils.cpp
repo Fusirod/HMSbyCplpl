@@ -4,6 +4,7 @@
 #include <limits>
 #include <sstream>
 #include <iomanip>
+#include <cstring>
 
 using namespace std;
 
@@ -59,6 +60,16 @@ namespace Utils {
         string value;
         getline(cin, value);
         return trim(value);
+    }
+
+    void copyText(char destination[], const string& source, int maxLength) {
+        if (maxLength <= 0) return;
+        strncpy(destination, source.c_str(), maxLength - 1);
+        destination[maxLength - 1] = '\0';
+    }
+
+    bool containsText(const char text[], const string& query) {
+        return strstr(text, query.c_str()) != nullptr;
     }
 
     string generateId(const string& prefix, int currentCount) {

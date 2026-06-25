@@ -1,11 +1,12 @@
 #include "InvoiceManager.h"
-#include "Utils.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cstring>
 
 InvoiceManager::InvoiceManager() {
     filename = "data/invoices.txt";
+    invoiceCount = 0;
     loadFromFile();
 }
 
@@ -13,13 +14,31 @@ InvoiceManager::~InvoiceManager() {
     saveToFile();
 }
 
+int InvoiceManager::findIndexById(const string& id) {
+    for (int i = 0; i < invoiceCount; ++i) {
+        if (id == ids[i]) return i;
+    }
+    return -1;
+}
+
+void InvoiceManager::removeAt(int index) {
+    for (int i = index; i < invoiceCount - 1; ++i) {
+        strcpy(ids[i], ids[i + 1]);
+        strcpy(patientIds[i], patientIds[i + 1]);
+        strcpy(dates[i], dates[i + 1]);
+        totalAmounts[i] = totalAmounts[i + 1];
+        strcpy(statuses[i], statuses[i + 1]);
+    }
+    --invoiceCount;
+}
+
 void InvoiceManager::loadFromFile() {
-    invoices.clear();
+    invoiceCount = 0;
     ifstream file(filename);
     if (!file.is_open()) return;
 
     string line;
-    while (getline(file, line)) {
+    while (invoiceCount < Utils::MAX_RECORDS && getline(file, line)) {
         if (line.empty()) continue;
         stringstream ss(line);
         string id, pId, date, amountStr, status;
@@ -30,13 +49,12 @@ void InvoiceManager::loadFromFile() {
         getline(ss, amountStr, '|');
         getline(ss, status, '|');
 
-        Invoice inv;
-        inv.id = id;
-        inv.patientId = pId;
-        inv.date = date;
-        inv.totalAmount = stoll(amountStr);
-        inv.status = status;
-        invoices.push_back(inv);
+        Utils::copyText(ids[invoiceCount], id, Utils::MAX_ID_LENGTH);
+        Utils::copyText(patientIds[invoiceCount], pId, Utils::MAX_ID_LENGTH);
+        Utils::copyText(dates[invoiceCount], date, Utils::MAX_TEXT_LENGTH);
+        totalAmounts[invoiceCount] = stoll(amountStr);
+        Utils::copyText(statuses[invoiceCount], status, Utils::MAX_TEXT_LENGTH);
+        ++invoiceCount;
     }
     file.close();
 }
@@ -45,9 +63,9 @@ void InvoiceManager::saveToFile() {
     ofstream file(filename);
     if (!file.is_open()) return;
 
-    for (const auto& inv : invoices) {
-        file << inv.id << "|" << inv.patientId << "|" << inv.date << "|" 
-             << inv.totalAmount << "|" << inv.status << "\n";
+    for (int i = 0; i < invoiceCount; ++i) {
+        file << ids[i] << "|" << patientIds[i] << "|" << dates[i] << "|"
+             << totalAmounts[i] << "|" << statuses[i] << "\n";
     }
     file.close();
 }
@@ -55,23 +73,29 @@ void InvoiceManager::saveToFile() {
 void InvoiceManager::addInvoice() {
     Utils::clearScreen();
     cout << "--- THEM HOA DON MOI ---\n";
-    Invoice inv;
-    inv.id = Utils::generateId("HD", invoices.size());
+    if (invoiceCount >= Utils::MAX_RECORDS) {
+        cout << "Danh sach hoa don da day!\n";
+        Utils::pauseScreen();
+        return;
+    }
+
+    string generatedId = Utils::generateId("HD", invoiceCount);
+    Utils::copyText(ids[invoiceCount], generatedId, Utils::MAX_ID_LENGTH);
     
-    cout << "Ma hoa don duoc cap: " << inv.id << "\n";
+    cout << "Ma hoa don duoc cap: " << ids[invoiceCount] << "\n";
     cout << "Nhap ma benh nhan: ";
-    inv.patientId = Utils::readString();
+    Utils::copyText(patientIds[invoiceCount], Utils::readString(), Utils::MAX_ID_LENGTH);
     
     cout << "Nhap ngay lap (DD/MM/YYYY): ";
-    inv.date = Utils::readString();
+    Utils::copyText(dates[invoiceCount], Utils::readString(), Utils::MAX_TEXT_LENGTH);
     
     cout << "Nhap tong tien: ";
-    inv.totalAmount = Utils::readLongLong();
+    totalAmounts[invoiceCount] = Utils::readLongLong();
     
     cout << "Nhap trang thai (Paid/Unpaid): ";
-    inv.status = Utils::readString();
+    Utils::copyText(statuses[invoiceCount], Utils::readString(), Utils::MAX_TEXT_LENGTH);
     
-    invoices.push_back(inv);
+    ++invoiceCount;
     saveToFile();
     cout << "Them hoa don thanh cong!\n";
     Utils::pauseScreen();
@@ -82,28 +106,27 @@ void InvoiceManager::editInvoice() {
     cout << "--- SUA HOA DON ---\n";
     cout << "Nhap ma hoa don can sua: ";
     string id = Utils::readString();
+    int index = findIndexById(id);
     
-    for (auto& inv : invoices) {
-        if (inv.id == id) {
-            cout << "Thong tin hien tai: BN " << inv.patientId << " - " << inv.totalAmount << " - " << inv.status << "\n";
-            
-            cout << "Nhap ngay lap moi (de trong de giu nguyen): ";
-            string date = Utils::readString();
-            if (!date.empty()) inv.date = date;
-            
-            cout << "Nhap tong tien moi (nhap -1 de giu nguyen): ";
-            long long amount = Utils::readLongLong();
-            if (amount != -1) inv.totalAmount = amount;
-            
-            cout << "Nhap trang thai moi (Paid/Unpaid) (de trong de giu nguyen): ";
-            string status = Utils::readString();
-            if (!status.empty()) inv.status = status;
-            
-            saveToFile();
-            cout << "Cap nhat thanh cong!\n";
-            Utils::pauseScreen();
-            return;
-        }
+    if (index != -1) {
+        cout << "Thong tin hien tai: BN " << patientIds[index] << " - " << totalAmounts[index] << " - " << statuses[index] << "\n";
+        
+        cout << "Nhap ngay lap moi (de trong de giu nguyen): ";
+        string date = Utils::readString();
+        if (!date.empty()) Utils::copyText(dates[index], date, Utils::MAX_TEXT_LENGTH);
+        
+        cout << "Nhap tong tien moi (nhap -1 de giu nguyen): ";
+        long long amount = Utils::readLongLong();
+        if (amount != -1) totalAmounts[index] = amount;
+        
+        cout << "Nhap trang thai moi (Paid/Unpaid) (de trong de giu nguyen): ";
+        string status = Utils::readString();
+        if (!status.empty()) Utils::copyText(statuses[index], status, Utils::MAX_TEXT_LENGTH);
+        
+        saveToFile();
+        cout << "Cap nhat thanh cong!\n";
+        Utils::pauseScreen();
+        return;
     }
     cout << "Khong tim thay hoa don voi ma " << id << "\n";
     Utils::pauseScreen();
@@ -114,15 +137,14 @@ void InvoiceManager::deleteInvoice() {
     cout << "--- XOA HOA DON ---\n";
     cout << "Nhap ma hoa don can xoa: ";
     string id = Utils::readString();
+    int index = findIndexById(id);
     
-    for (auto it = invoices.begin(); it != invoices.end(); ++it) {
-        if (it->id == id) {
-            invoices.erase(it);
-            saveToFile();
-            cout << "Xoa hoa don thanh cong!\n";
-            Utils::pauseScreen();
-            return;
-        }
+    if (index != -1) {
+        removeAt(index);
+        saveToFile();
+        cout << "Xoa hoa don thanh cong!\n";
+        Utils::pauseScreen();
+        return;
     }
     cout << "Khong tim thay hoa don voi ma " << id << "\n";
     Utils::pauseScreen();
@@ -135,10 +157,10 @@ void InvoiceManager::searchInvoice() {
     string query = Utils::readString();
     
     bool found = false;
-    for (const auto& inv : invoices) {
-        if (inv.id.find(query) != string::npos || inv.patientId.find(query) != string::npos) {
-            cout << inv.id << " - BN: " << inv.patientId << " - Ngay: " << inv.date 
-                 << " - Tong tien: " << inv.totalAmount << " - Trang thai: " << inv.status << "\n";
+    for (int i = 0; i < invoiceCount; ++i) {
+        if (Utils::containsText(ids[i], query) || Utils::containsText(patientIds[i], query)) {
+            cout << ids[i] << " - BN: " << patientIds[i] << " - Ngay: " << dates[i]
+                 << " - Tong tien: " << totalAmounts[i] << " - Trang thai: " << statuses[i] << "\n";
             found = true;
         }
     }
@@ -149,12 +171,12 @@ void InvoiceManager::searchInvoice() {
 void InvoiceManager::displayAllInvoices() {
     Utils::clearScreen();
     cout << "--- DANH SACH HOA DON ---\n";
-    if (invoices.empty()) {
+    if (invoiceCount == 0) {
         cout << "Chua co du lieu.\n";
     } else {
-        for (const auto& inv : invoices) {
-            cout << inv.id << " | BN: " << inv.patientId << " | Ngay: " << inv.date 
-                 << " | Tong tien: " << inv.totalAmount << " | Trang thai: " << inv.status << "\n";
+        for (int i = 0; i < invoiceCount; ++i) {
+            cout << ids[i] << " | BN: " << patientIds[i] << " | Ngay: " << dates[i]
+                 << " | Tong tien: " << totalAmounts[i] << " | Trang thai: " << statuses[i] << "\n";
         }
     }
     Utils::pauseScreen();
@@ -162,9 +184,9 @@ void InvoiceManager::displayAllInvoices() {
 
 long long InvoiceManager::calculateTotalRevenue() {
     long long total = 0;
-    for (const auto& inv : invoices) {
-        if (inv.status == "Paid") {
-            total += inv.totalAmount;
+    for (int i = 0; i < invoiceCount; ++i) {
+        if (strcmp(statuses[i], "Paid") == 0) {
+            total += totalAmounts[i];
         }
     }
     return total;

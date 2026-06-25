@@ -1,19 +1,27 @@
 #ifndef PATIENT_MANAGER_H
 #define PATIENT_MANAGER_H
 
-#include "models.h"
-#include <vector>
+#include "Utils.h"
 #include <string>
 
 using namespace std;
 
-struct PatientManager {
+class PatientManager {
 private:
-    vector<Patient> patients;
+    int patientCount;
+    char ids[Utils::MAX_RECORDS][Utils::MAX_ID_LENGTH];
+    char names[Utils::MAX_RECORDS][Utils::MAX_TEXT_LENGTH];
+    int ages[Utils::MAX_RECORDS];
+    char genders[Utils::MAX_RECORDS][Utils::MAX_TEXT_LENGTH];
+    char phones[Utils::MAX_RECORDS][Utils::MAX_TEXT_LENGTH];
+    char addresses[Utils::MAX_RECORDS][Utils::MAX_TEXT_LENGTH];
+    char medicalHistories[Utils::MAX_RECORDS][Utils::MAX_LONG_TEXT_LENGTH];
     string filename;
 
     void loadFromFile();
     void saveToFile();
+    int findIndexById(const string& id);
+    void removeAt(int index);
 
 public:
     PatientManager();
@@ -25,8 +33,7 @@ public:
     void searchPatient();
     void displayAllPatients();
     
-    // For other modules
-    Patient* getPatientById(const string& id);
+    int getPatientIndexById(const string& id);
     bool patientExists(const string& id);
 };
 

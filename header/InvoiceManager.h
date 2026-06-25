@@ -1,19 +1,25 @@
 #ifndef INVOICE_MANAGER_H
 #define INVOICE_MANAGER_H
 
-#include "models.h"
-#include <vector>
+#include "Utils.h"
 #include <string>
 
 using namespace std;
 
-struct InvoiceManager {
+class InvoiceManager {
 private:
-    vector<Invoice> invoices;
+    int invoiceCount;
+    char ids[Utils::MAX_RECORDS][Utils::MAX_ID_LENGTH];
+    char patientIds[Utils::MAX_RECORDS][Utils::MAX_ID_LENGTH];
+    char dates[Utils::MAX_RECORDS][Utils::MAX_TEXT_LENGTH];
+    long long totalAmounts[Utils::MAX_RECORDS];
+    char statuses[Utils::MAX_RECORDS][Utils::MAX_TEXT_LENGTH];
     string filename;
 
     void loadFromFile();
     void saveToFile();
+    int findIndexById(const string& id);
+    void removeAt(int index);
 
 public:
     InvoiceManager();

@@ -6,9 +6,9 @@
 
 using namespace std;
 
-struct SystemManager {
+class SystemManager {
 private:
-    Employee* currentUser;
+    int currentUserIndex;
     EmployeeManager* empManager;
 
 public:
@@ -18,7 +18,7 @@ public:
     bool login();
     void logout();
     bool isLoggedIn();
-    Employee* getCurrentUser();
+    int getCurrentUserIndex();
 
     void changePassword();
     void changeTheme(); // Thay doi mau sac console (Window)

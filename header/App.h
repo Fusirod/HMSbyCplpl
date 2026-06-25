@@ -9,7 +9,7 @@
 #include "InventoryManager.h"
 #include "InvoiceManager.h"
 
-struct App {
+class App {
 private:
     EmployeeManager empManager;
     PatientManager patManager;

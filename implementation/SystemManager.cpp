@@ -5,11 +5,11 @@
 
 SystemManager::SystemManager(EmployeeManager* empMgr) {
     this->empManager = empMgr;
-    this->currentUser = nullptr;
+    this->currentUserIndex = -1;
 }
 
 SystemManager::~SystemManager() {
-    this->currentUser = nullptr;
+    this->currentUserIndex = -1;
 }
 
 bool SystemManager::login() {
@@ -21,9 +21,9 @@ bool SystemManager::login() {
     cout << "Mat khau: ";
     string pass = Utils::readString();
 
-    currentUser = empManager->authenticate(user, pass);
-    if (currentUser != nullptr) {
-        cout << "Dang nhap thanh cong! Xin chao " << currentUser->name << "\n";
+    currentUserIndex = empManager->authenticate(user, pass);
+    if (currentUserIndex != -1) {
+        cout << "Dang nhap thanh cong! Xin chao " << empManager->getEmployeeName(currentUserIndex) << "\n";
         Utils::pauseScreen();
         return true;
     } else {
@@ -34,17 +34,17 @@ bool SystemManager::login() {
 }
 
 void SystemManager::logout() {
-    currentUser = nullptr;
+    currentUserIndex = -1;
     cout << "Da dang xuat thanh cong!\n";
     Utils::pauseScreen();
 }
 
 bool SystemManager::isLoggedIn() {
-    return currentUser != nullptr;
+    return currentUserIndex != -1;
 }
 
-Employee* SystemManager::getCurrentUser() {
-    return currentUser;
+int SystemManager::getCurrentUserIndex() {
+    return currentUserIndex;
 }
 
 void SystemManager::changePassword() {
@@ -54,10 +54,10 @@ void SystemManager::changePassword() {
     cout << "Nhap mat khau cu: ";
     string oldPass = Utils::readString();
 
-    if (oldPass == currentUser->password) {
+    if (oldPass == empManager->getEmployeePassword(currentUserIndex)) {
         cout << "Nhap mat khau moi: ";
         string newPass = Utils::readString();
-        currentUser->password = newPass;
+        empManager->updateEmployeePassword(currentUserIndex, newPass);
         cout << "Doi mat khau thanh cong!\n";
     } else {
         cout << "Mat khau cu khong chinh xac!\n";
